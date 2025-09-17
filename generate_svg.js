@@ -1,67 +1,42 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
 
-const challenges = [
-  "qr-code-component",
-  "product-preview-card-component",
-  "interactive-rating-component",
-  "results-summary-component",
-  "order-summary-component",
-  "stats-preview-card-component"
-]; // Add all your challenge slugs here
+try {
+  // Get a list of all remote branches, excluding the main branch
+  const gitBranches = execSync('git branch -r --list "origin/*" | grep -v "origin/main"')
+    .toString()
+    .split('\n')
+    .map(b => b.trim().replace('origin/', ''))
+    .filter(b => b.length > 0)
+    .sort();
 
-const branchStatus = {};
-const gitBranches = execSync('git branch -r').toString().split('\n').map(b => b.trim());
+  let tableContent = `| Challenge | Status |\n|---|---|\n`;
 
-challenges.forEach(challenge => {
-  const branchExists = gitBranches.some(b => b.includes(challenge));
-  const isMerged = gitBranches.some(b => b.includes(`main`) && !gitBranches.includes(`remotes/origin/${challenge}`));
-  
-  if (isMerged) {
-    branchStatus[challenge] = 'green'; // Completed
-  } else if (branchExists) {
-    branchStatus[challenge] = 'yellow'; // In progress
+  if (gitBranches.length > 0) {
+    gitBranches.forEach(branch => {
+      // You can add logic here to determine a status, but for now, it's "In Progress"
+      const status = 'In Progress';
+      tableContent += `| [${branch.replace(/-/g, ' ')}](https://github.com/${process.env.GITHUB_REPOSITORY}/tree/${branch}) | ${status} |\n`;
+    });
   } else {
-    branchStatus[challenge] = 'grey'; // Not started
+    tableContent += `| No challenges started yet | - |\n`;
   }
-});
 
-function createSVG(status) {
-  const size = 50;
-  const padding = 15;
-  const itemsPerRow = 5;
+  let readmeContent = fs.readFileSync('README.md', 'utf-8');
   
-  const svgItems = challenges.map((challenge, index) => {
-    const x = (index % itemsPerRow) * (size + padding);
-    const y = Math.floor(index / itemsPerRow) * (size + padding);
-    const color = status[challenge];
-    
-    return `<circle cx="${x + size / 2}" cy="${y + size / 2}" r="${size / 2 - 5}" fill="${color}" stroke="black" stroke-width="2" />
-            <text x="${x + size / 2}" y="${y + size / 2 + 5}" font-family="Arial" font-size="10" text-anchor="middle" fill="white">${index + 1}</text>
-            <title>${challenge.replace(/-/g, ' ')}</title>`;
-  }).join('');
+  const tablePlaceholder = '';
+  const tableEndPlaceholder = '';
   
-  const rows = Math.ceil(challenges.length / itemsPerRow);
-  const width = itemsPerRow * (size + padding);
-  const height = rows * (size + padding);
-  
-  return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-            ${svgItems}
-          </svg>`;
+  if (readmeContent.includes(tablePlaceholder)) {
+    const start = readmeContent.indexOf(tablePlaceholder) + tablePlaceholder.length;
+    const end = readmeContent.indexOf(tableEndPlaceholder);
+    readmeContent = readmeContent.substring(0, start) + '\n' + tableContent + '\n' + readmeContent.substring(end);
+  } else {
+    readmeContent += `\n\n${tablePlaceholder}\n${tableContent}\n${tableEndPlaceholder}`;
+  }
+
+  fs.writeFileSync('README.md', readmeContent);
+
+} catch (error) {
+  console.error("Error generating table:", error);
 }
-
-const svg = createSVG(branchStatus);
-let readmeContent = fs.readFileSync('README.md', 'utf-8');
-
-const svgPlaceholder = '';
-const svgEndPlaceholder = '';
-
-if (readmeContent.includes(svgPlaceholder)) {
-  const start = readmeContent.indexOf(svgPlaceholder) + svgPlaceholder.length;
-  const end = readmeContent.indexOf(svgEndPlaceholder);
-  readmeContent = readmeContent.substring(0, start) + '\n' + svg + '\n' + readmeContent.substring(end);
-} else {
-  readmeContent += `\n\n${svgPlaceholder}\n${svg}\n${svgEndPlaceholder}`;
-}
-
-fs.writeFileSync('README.md', readmeContent);

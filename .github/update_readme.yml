@@ -14,7 +14,7 @@ on:
       - '*'
 
 jobs:
-  update_svg:
+  update_table:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -25,14 +25,11 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run SVG generation script
-        run: node generate_svg.js
+      - name: Run Markdown table generation script
+        run: node generate_table.js
 
       - name: Commit and push changes
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@v6 
         with:
-          commit_message: "feat: Update Frontend Mentor progress SVG"
+          commit_message: "feat: Update Frontend Mentor progress table"
           file_pattern: 'README.md'
