@@ -1,0 +1,38 @@
+name: Update Frontend Mentor Progress
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    types:
+      - closed
+      - opened
+      - reopened
+      - synchronize
+    branches:
+      - '*'
+
+jobs:
+  update_svg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run SVG generation script
+        run: node generate_svg.js
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "feat: Update Frontend Mentor progress SVG"
+          file_pattern: 'README.md'
