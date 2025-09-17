@@ -18,14 +18,18 @@
 body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--Slate-300);
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 2 em;
-    padding: 10px;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;   // Declare 0 margin and 0 padding to override default browser styles
+    padding: 0;  
+}
+
+main {
+    display: flex;        
     flex-direction: column;
-    overflow: hidden;
+    align-items: center;
 }
 
 card {
