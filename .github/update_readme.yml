@@ -28,8 +28,10 @@ jobs:
       - name: Run Markdown table generation script
         run: node generate_table.js
 
-      - name: Commit and push changes
-        uses: stefanzweifel/git-auto-commit-action@v6 
+      - name: Git Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@v6.0.1
         with:
           commit_message: "feat: Update Frontend Mentor progress table"
           file_pattern: 'README.md'
+
+          
