@@ -43,6 +43,7 @@ card {
     border-radius: 15px;
     background-color: var(--White);
     box-shadow: 8px 8px var(--Gray-950);
+    border: 2px solid var(--Gray-950);
     padding: 20px;
 }
 
@@ -70,19 +71,21 @@ card {
     color: var(--Gray-500);
     font-size: 14px;
     font-weight: 700;
+    margin: 10px 0 10px 0;
 }
 
-h2 {
-    font-size: 22px;
+.card__content h2 {
+    font-size: 20px;
     margin: 0;
     margin-bottom: 10px;
     color: var(--Gray-950);
-    
+    font-weight: 800;
 }
 
 .card__description {
     font-size: 16px;
     color: var(--Gray-500);
+    font-weight: 500;
     line-height: 1.5;
     margin-top: 0;
 }
@@ -101,7 +104,7 @@ h2 {
 .card__author--name {
     font-size: 14px;
     color: var(--Gray-950);
-    font-weight: 700;  
+    font-weight: 800;  
 }
 
 
