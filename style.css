@@ -32,9 +32,10 @@ main {
 .card__main {
   background-color: var(--Grey-800);
   border-radius: 5px;
-  padding: 30px 30px 30px 30px;
+  padding: 2rem;
+  margin: 1rem auto;
   max-width: 300px;
-  width: 80%;
+  width: 90%;
 }
 
 img {
@@ -89,4 +90,16 @@ card {
 }
 .attribution a {
   color: hsl(228, 45%, 44%);
+}
+
+@media (max-width: 600px) {
+  .card {
+    max-width: 75vw;
+    padding: 3rem;
+  }
+}
+
+card:hover {
+  background-color: var(--Green);
+  cursor: pointer;
 }
